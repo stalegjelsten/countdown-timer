@@ -1,11 +1,13 @@
 let timer;
 let gong;
 let bg;
+let FR;
 
 
 function setup() {
   canv = createCanvas(windowWidth, windowHeight);
-  frameRate(30);
+  FR = 1
+  frameRate(FR);
   colorMode(HSB);
   gong = loadSound("assets/gong.wav");
   bg = loadImage("assets/bg.jpg")
@@ -37,7 +39,7 @@ function draw() {
   image(bg, 0.5 * width, 0.5 * height, scale * width, scale * bg.height * width / bg.width); // to fit 
   textAlign(CENTER, CENTER);
 
-  if (frameCount % 30 == 0 && timer.started) {
+  if (frameCount % FR == 0 && timer.started) {
     timer.secondsRun++
     timer.seconds--
   }
