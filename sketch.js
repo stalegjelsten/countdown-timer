@@ -62,3 +62,9 @@ function draw() {
   text(mins + ":" + secs, width / 2, height / 2);
 
 }
+
+function keyPressed() {
+  if (key == " ") {
+    timer.started = !timer.started;
+  }
+}
