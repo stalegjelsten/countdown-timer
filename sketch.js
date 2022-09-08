@@ -1,20 +1,24 @@
 let timer;
 let gong;
 let bg;
-let FR;
+let FR = 1
+let params = {
+  clock: false
+}
 
 
 function setup() {
   canv = createCanvas(windowWidth, windowHeight);
-  FR = 1
   frameRate(FR);
   colorMode(HSB);
+  textSize(width / 5)
   gong = loadSound("assets/gong.wav");
   bg = loadImage("assets/bg.jpg")
   timer = new Timer(5, 0, (0, 0, 0));
   let gui = new dat.GUI();
   gui.add(timer, "seconds", 0, 3600, 5);
   gui.add(timer, "start").name("Start / pause");
+  gui.add(params, "clock").name("Vis klokke")
 }
 
 class Timer {
@@ -60,10 +64,19 @@ function draw() {
   } else {
     mins = str(mins)
   }
-  textSize(width / 5)
-  text(mins + ":" + secs, width / 2, height / 2);
+
+
+  if (params.clock) {
+    text(mins + ":" + secs, width / 2, height / 4);
+    text(String(hour()).padStart(2, "0") + ":" + String(minute()).padStart(2, "0") + ":" + String(second()).padStart(2, "0"), width / 2, 3 * height / 4);
+  } else {
+    text(mins + ":" + secs, width / 2, height / 2);
+  }
+
+
 
 }
+
 
 function keyPressed() {
   if (key == " ") {
