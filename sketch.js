@@ -1,9 +1,13 @@
 let timer;
-let gong;
+let alarmSound;
 let bg;
-let FR = 1
+let alarmImg;
+let FR = 10
 let params = {
-  clock: false
+  clock: false,
+  alarmFile: "assets/sleigh_bells.mp3",
+  backgroundFile: "assets/christmas.jpg",
+  alarmImage: "assets/nisse.png",
 }
 
 
@@ -12,8 +16,11 @@ function setup() {
   frameRate(FR);
   colorMode(HSB);
   textSize(width / 5)
-  gong = loadSound("assets/gong.wav");
-  bg = loadImage("assets/christmas.jpg")
+  alarmSound = loadSound(params.alarmFile);
+  bg = loadImage(params.backgroundFile)
+  if (params.alarmImage) {
+    alarmImg = loadImage(params.alarmImage)
+  }
   timer = new Timer(5, 0, (0, 0, 0));
   let gui = new dat.GUI();
   gui.add(timer, "seconds", 0, 3600, 5);
@@ -27,10 +34,13 @@ class Timer {
     this.color = color
     this.secondsRun = 0
     this.started = false
+    this.alarmStarted = false
+    this.alarmImageRot = false
   }
 
   start() {
     this.started = !this.started;
+    this.alarmStarted = false
     loop();
   }
 }
@@ -49,14 +59,32 @@ function draw() {
   }
   if (timer.seconds == 0) {
     timer.started = false;
-    gong.play()
-    noLoop()
+    if (!timer.alarmStarted) {
+      alarmSound.play();
+      timer.alarmStarted = true
+    }
+
+    if (params.alarmImage) {
+      push()
+      let alarmImgSize = 0.2
+      translate(0.5 * width, 0.5 * height)
+      if (frameCount % 2 == 0) {
+        timer.alarmImageRot = !timer.alarmImageRot;
+      }
+      if (timer.alarmImageRot) {
+        rotate(PI/5);
+        alarmImgSize = 0.25
+      }
+      image(alarmImg, 0, 0, alarmImgSize * width, alarmImgSize*width*alarmImg.height/alarmImg.width)
+      pop()
+
+    }
   }
   let secs = floor(timer.seconds % 60);
   if (str(secs).length == 1) {
     secs = str("0" + secs);
   } else {
-    secs = str(secs)
+    secs = str(secs);
   }
   let mins = floor(timer.seconds / 60);
   if (str(mins).length == 1) {
@@ -70,7 +98,9 @@ function draw() {
     text(mins + ":" + secs, width / 2, height / 4);
     text(String(hour()).padStart(2, "0") + ":" + String(minute()).padStart(2, "0") + ":" + String(second()).padStart(2, "0"), width / 2, 3 * height / 4);
   } else {
-    text(mins + ":" + secs, width / 2, height / 2);
+    if (timer.seconds != 0) {
+      text(mins + ":" + secs, width / 2, height / 2);
+    }
   }
 
 
