@@ -13,7 +13,7 @@ function setup() {
   colorMode(HSB);
   textSize(width / 5)
   gong = loadSound("assets/gong.wav");
-  bg = loadImage("assets/bg.jpg")
+  bg = loadImage("assets/christmas.jpg")
   timer = new Timer(5, 0, (0, 0, 0));
   let gui = new dat.GUI();
   gui.add(timer, "seconds", 0, 3600, 5);
